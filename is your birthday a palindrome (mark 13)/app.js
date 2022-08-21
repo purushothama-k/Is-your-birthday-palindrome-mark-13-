@@ -1,8 +1,8 @@
 'use strict';
 
-const inputDateEl = document.querySelector("#input_date");
-const btnEl = document.querySelector(".btn");
-const outputEl = document.querySelector(".output");
+const inputDateEl = document.querySelector('#input_date');
+const btnEl = document.querySelector('.btn');
+const outputEl = document.querySelector('.output');
 // console.log(getAllDateFormats(date));
 
 const reversingStr = function (str) {
@@ -78,81 +78,75 @@ const checkPalindromeForAllDateFormats = function (date) {
 
 //checking if the year is leap year or not
 
-const checkLeapYear = function(year){
-if(year % 400 === 0){
-  return true
-}
-if(year % 100 === 0){
-  return false
-}
-if(year % 4 ===0){
-  return true
-}
-return false
-}
+const checkLeapYear = function (year) {
+  if (year % 400 === 0) {
+    return true;
+  }
+  if (year % 100 === 0) {
+    return false;
+  }
+  if (year % 4 === 0) {
+    return true;
+  }
+  return false;
+};
 
 // console.log(checkLeapYear(2021))
 //function to increment date
 
-function getNextDate(date){
+function getNextDate(date) {
   let day = date.day + 1;
-  let month =date.month;
+  let month = date.month;
   let year = date.year;
 
-  var daysInMonth = [31,28,31,30,31,30,31,31,30,31,30,31];
+  var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-//if month is february so we need to validate it, if it's a leap year or not.
-  if(month === 2){
-    if(checkLeapYear(year)){
-      if (day > 29){
-        day =1 ;
-        month++
+  //if month is february so we need to validate it, if it's a leap year or not.
+  if (month === 2) {
+    if (checkLeapYear(year)) {
+      if (day > 29) {
+        day = 1;
+        month++;
       }
-    }else{
-      if (day > 28){
-        day =1 ;
-        month++
+    } else {
+      if (day > 28) {
+        day = 1;
+        month++;
       }
     }
-
-  }else{
-
+  } else {
     //if day is greater than days in month then it should start with 1st day of next month
-    if(day > daysInMonth[month-1])
-    day =1 ;
-    month++
+    if (day > daysInMonth[month - 1]) day = 1;
+    month++;
   }
 
-  if(month >12){
+  if (month > 12) {
     month = 1;
-    year++
+    year++;
   }
 
-  return{
-    day:day,
-    month:month,
-    year:year
-  }
-
+  return {
+    day: day,
+    month: month,
+    year: year,
+  };
 }
 
-function findNextPalindromeDate (date){
-
+function findNextPalindromeDate(date) {
   var counter = 0;
   var nextDate = getNextDate(date);
 
-  while(1){
+  while (1) {
     counter++;
     var isPalindrome = checkPalindromeForAllDateFormats(nextDate);
 
-    if(isPalindrome){
+    if (isPalindrome) {
       break;
     }
     nextDate = getNextDate(nextDate);
   }
 
   return [counter, nextDate];
-
 }
 
 const date = {
@@ -164,30 +158,36 @@ const date = {
 // console.log(findNextPalindromeDate(date));
 // console.log(getNextDate(date));
 
-const clickHandler = function(a){
-
+const clickHandler = function (a) {
   const inputDate = inputDateEl.value;
 
-if(inputDate !== ""){
-  const listOfDates = inputDate.split('-');
-  const date = {
-    day:Number(listOfDates[2]),
-    month:Number(listOfDates[1]),
-    year:Number(listOfDates[0]),
+  if (inputDate !== '') {
+    const listOfDates = inputDate.split('-');
+    const date = {
+      day: Number(listOfDates[2]),
+      month: Number(listOfDates[1]),
+      year: Number(listOfDates[0]),
+    };
+    const isPalindrome = checkPalindromeForAllDateFormats(date);
+
+    if (isPalindrome) {
+      outputEl.textContent =
+        'Awesome! your birthday is a palindrome 😉😉😉😉😉';
+    } else {
+      const [counter, nextDate] = findNextPalindromeDate(date);
+      outputEl.textContent = `The next palindrome date is ${nextDate.day}/${nextDate.month}/${nextDate.year} and you missed it by ${counter} days 😒😒😒😒😒!`;
+    }
+    console.log(isPalindrome);
   }
-  const isPalindrome = checkPalindromeForAllDateFormats(date);
+};
 
-  if(isPalindrome){
-    outputEl.textContent="Awesome! your birthday is a palindrome 😉😉😉😉😉"
-  }else{
-    const [counter, nextDate] =findNextPalindromeDate(date);
-    outputEl.textContent=`The next palindrome date is ${nextDate.day}/${nextDate.month}/${nextDate.year} and you missed it by ${counter} days 😒😒😒😒😒!`
+btnEl.addEventListener('click', clickHandler);
 
+btnEl.addEventListener('click', function () {
+  if (Number(inputDateEl.value) == 0) {
+    outputEl.textContent = 'Please select the date!';
+    console.log('Hello');
+  } else {
+    clickHandler();
   }
-  console.log(isPalindrome);
-}
-
-}
-
-
-btnEl.addEventListener("click", clickHandler);
+});
